@@ -71,13 +71,13 @@ class StudiKasus{
 
 
 int main() { 
-  // StudiKasus P7;
-  // P7.isi_nilai();
-  // cout<<endl;
-  // P7.sorting_ascending();
-  // cout<<endl;
-  // P7.cetak();
-  // cout<<endl;
-  // P7.cari_data();
-  // cout<<endl;
+  StudiKasus P7;
+  P7.isi_nilai();
+  cout<<endl;
+  P7.sorting_ascending();
+  cout<<endl;
+  P7.cetak();
+  cout<<endl;
+  P7.cari_data();
+  cout<<endl;
 }
