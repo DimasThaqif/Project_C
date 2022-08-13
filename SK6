@@ -1,0 +1,87 @@
+#include<iostream>
+using namespace std;
+
+class studikasus{
+  private:
+    string nama_dosen, matkul;
+    int nilai[1000];
+    int maks, min;
+    float total, rata, indeks;
+
+  public:
+    void input(){
+      cout<<"Nama Dosen       : ";
+      getline(cin,nama_dosen);
+      cout<<"Nama Matkul      : ";
+      getline(cin,matkul);
+      cout<<"Banyak Mahasiswa : ";
+      cin>>indeks;
+      for(int a=0; a<indeks; a++){
+        cout<<"Nilai Mahasiswa ke - "<<a+1<<" = ";
+        cin>>nilai[a];
+        total+=nilai[a];
+      }
+      rata=total/indeks;
+    }
+
+    // void isi_nilai(){
+    //   for(int a=0; a<indeks; a++){
+    //     nilai[a]=rand() % 100+1;
+    //     total+=nilai[a];
+    //   }
+    // }
+
+    void cari_min(){
+      min=nilai[0];
+      for(int a=0; a<indeks; a++){
+        if(min>nilai[a]){
+          min=nilai[a];
+        }
+      }
+    }
+
+    void cari_maks(){
+      maks=nilai[0];
+      for(int a=0; a<indeks; a++){
+        if(maks<nilai[a]){
+          maks=nilai[a];
+        }
+      }
+    }
+
+    void garis(int x){
+      cout<<"+";
+      for(int a=0; a<x; a++){
+        cout<<"-";
+      }
+      cout<<"+"<<endl;
+    }
+
+    void cetak(){
+      garis(36);
+      cout<<"| Daftar Nilai "<<matkul<<"\t|"<<endl;
+      garis(36);
+      cout<<"| Nama Dosen\t: "<<nama_dosen<<"\t\t|"<<endl;
+      cout<<"| Nilai \t\t:   "<<nilai[0]<<"\t\t\t|"<<endl;
+      for(int a=1; a<indeks; a++){
+        cout<<"|\t\t\t\t\t"<<nilai[a]<<"\t\t\t|"<<endl;
+      }
+      garis(36);
+      cout<<"| Nilai Minimum   : "<<min<<"\t\t\t\t|"<<endl;
+      garis(36);
+      cout<<"| Nilai Maksimum  : "<<maks<<"\t\t\t\t|"<<endl;
+      garis(36);
+      cout<<"| Nilai Rata-rata : "<<rata<<"\t\t\t|"<<endl;
+      garis(36);
+    }
+};
+
+int main(){
+  // srand(time(NULL));
+  studikasus p6;
+  p6.input();
+  p6.cari_min();
+  p6.cari_maks();
+  p6.cetak();
+  return 0;
+}
