@@ -1,0 +1,346 @@
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+class responsi{
+    private:
+        string user, password, cari, alamat, nama_warna[100], nama_ukuran[100];
+        string barang[4]={"Rubik 3x3 Moyu Weilong WR M 2021", "Rubik 2x2 GAN 251 M Leap", "Rubik 4x4 Valk 4M", "Sepatu Pria/Sketcher"};
+        int harga[4]={450000, 488000, 460000, 350000}, pcs[4]={0, 0, 0}, pcs_total[3]={0, 0, 0}, ukuran[100], warna[100];
+        int saldo=10000000, pilih[2]={1, 1}, total[5]={0, 0, 0, 0, 0}, subtotal[4]={0, 0, 0, 0}, ongkir=0, cashback=0, asuransi=0, pilih2, potongan=0, indeks;
+        char milih, bayar;
+        bool ket_barang[4]={false, false, false, false};
+    public:
+        void login(){
+            cout<<"Selamat datang di Tokopedia"<<endl;
+            cout<<"Username : ";
+            cin>>user;
+            cout<<"Password : ";
+            cin>>password;
+            if(user=="fajar" && password=="165"){
+                system("cls");
+                garis(41);
+                cout<<"|\t\t\t\t\t|"<<endl;
+                cout<<"|\tSelamat Datang Kembali Fajar\t|"<<endl;
+                cout<<"|\t\t\t\t\t|"<<endl;
+                garis(41);
+                cout<<"Saldo : \nRp. ";
+                cout<<saldo<<endl;
+            }else{
+                cout<<"Username atau Password salah"<<endl;                
+            }
+        }
+
+        void cari_barang(){
+            cout<<"Cari Barang : ";
+            cin>>cari;
+            if(cari=="Rubik"){
+                for(int a=0; a<3; a++){
+                    cout<<a+1<<". "<<barang[a]<<endl;
+                }        
+            }else if(cari=="Sepatu"){
+                cout<<"1. "<<barang[3]<<endl;
+            }else{
+                cout<<"Barang tidak ditemukan"<<endl;
+            }
+        }
+
+        void pilih_barang(){
+            while(pilih[0]!=0 && cari=="Rubik"){                
+                cout<<endl<<"Silakan pilih (Input 0 jika selesai) : ";
+                cin>>pilih[0];
+                switch(pilih[0]){
+                    case 0:
+                        break;
+                    case 1:                        
+                        indeks=0;
+                        ket_barang[indeks]=true;
+                        cout<<"Pcs : ";
+                        cin>>pcs[indeks];
+                        pcs_total[indeks]+=pcs[indeks];
+                        subtotal[indeks]=harga[indeks]*pcs[indeks];
+                        total[indeks]+=subtotal[indeks];
+                        
+                        break;
+                    case 2:
+                        indeks=1;
+                        ket_barang[indeks]=true;
+                        cout<<"Pcs : ";
+                        cin>>pcs[indeks];
+                        pcs_total[indeks]+=pcs[indeks];
+                        subtotal[indeks]=harga[indeks]*pcs[indeks];
+                        total[indeks]+=subtotal[indeks];
+                        
+                        break;
+                    case 3:
+                        indeks=2;
+                        ket_barang[indeks]=true;
+                        cout<<"Pcs : ";
+                        cin>>pcs[indeks];
+                        pcs_total[indeks]+=pcs[indeks];
+                        subtotal[indeks]=harga[indeks]*pcs[indeks];
+                        total[indeks]+=subtotal[indeks];
+                        
+                        break;
+                    default:
+                        cout<<"Barang tidak ada"<<endl;
+                }
+            }
+
+            while(pilih[0]!=0 && cari=="Sepatu"){
+                cout<<endl<<"Silakan pilih (Input 0 jika selesai) : ";
+                cin>>pilih[0];
+                switch(pilih[0]){
+                    case 0:
+                        break;
+                    case 1:
+                        indeks=3;
+                        ket_barang[indeks]=true;
+                        cout<<"Pcs    : ";
+                        cin>>pcs[indeks];
+                        for(int a=0; a<pcs[indeks]; a++){
+                            cout<<endl<<"Warna  : "<<endl;
+                            cout<<"1. Hitam\n2. Putih\nPilih : ";
+                            cin>>warna[a];
+                            cout<<endl<<"Ukuran : "<<endl;
+                            cout<<"1. 40\n2. 41\n3. 42\n4. 43\n5. 44\n6. 45\nPilih : ";
+                            cin>>ukuran[a];
+                            switch(warna[a]){
+                                case 1:
+                                    nama_warna[a]="Hitam";
+                                    break;
+                                case 2:
+                                    nama_warna[a]="Putih";
+                                    break;
+                            }
+                            switch(ukuran[a]){
+                                case 1:
+                                    nama_ukuran[a]="40";
+                                    break;
+                                case 2:
+                                    nama_ukuran[a]="41";
+                                    break;
+                                case 3:
+                                    nama_ukuran[a]="42";
+                                    break;
+                                case 4:
+                                    nama_ukuran[a]="43";
+                                    break;
+                                case 5:
+                                    nama_ukuran[a]="44";
+                                    break;
+                                case 6:
+                                    nama_ukuran[a]="45";
+                                    break;
+                            }
+                        }
+                        pcs_total[indeks]+=pcs[indeks];
+                        subtotal[indeks]=harga[indeks]*pcs[indeks];
+                        total[indeks]+=subtotal[indeks];
+                        
+                        break;
+                    default:
+                        cout<<"Barang tidak ada"<<endl;
+                }
+            }
+            pilih[0]=10;
+            cout<<endl<<"Ingin mencari lagi? (y/n) : ";
+            cin>>milih;
+            if(milih=='y'){
+                cari_barang();
+                pilih_barang();
+            }else{
+
+            }
+            total[4]=total[0]+total[1]+total[2]+total[3];
+        }
+
+        void input_alamat(){
+            cin.ignore();
+            cout<<"Masukkan alamatmu : ";
+            getline(cin, alamat);
+        }
+
+        void apply(){
+            while(pilih[1]!=0){
+                cout<<endl<<"Voucher : "<<endl;
+                cout<<"1. Gratis Ongkir. Min belanja Rp50RB"<<endl;
+                cout<<"2. Cashback 10% hingga Rp350RB. Min Belanja Rp600RB"<<endl;
+                cout<<"Pilih (Input 0 jika selesai) : ";
+                cin>>pilih[1];
+                if(pilih[1]==1 && total[4]>50000){
+                    potongan=ongkir;
+                    cout<<"Voucher berhasil digunakan"<<endl;
+                }else if(pilih[1]==2 && total[4]>600000){
+                    cashback=total[4]*0.1;
+                    if(cashback>350000){
+                        cashback=350000;
+                    }
+                    cout<<"Voucher berhasil digunakan"<<endl;
+                }else if(pilih[1]==0){
+                    
+                }else{
+                    cout<<"Voucher tidak bisa dipakai karena belanjanya tidak memenuhi minimum"<<endl;
+                }
+            }
+            cout<<endl<<"Asuransi? (y/n) : ";
+            cin>>milih;
+            if(milih=='y'){
+                asuransi=total[4]*0.005;
+            }
+        }
+
+        void kurir(){
+            cout<<endl<<"Jenis Pengiriman : "<<endl;
+            cout<<"1. Reguler\n2. Instant"<<endl;
+            cout<<"Pilih : ";
+            cin>>pilih2;
+            cout<<endl;
+            switch(pilih2){
+                case 1:
+                    cout<<"Kurir : "<<endl;
+                    cout<<"1. AnterAja\n2. SiCepat Reg\n";
+                    cout<<"Pilih : ";
+                    cin>>pilih2;
+                    switch(pilih2){
+                        case 1:
+                            ongkir=22000;
+                            break;
+                        case 2:
+                            ongkir=25000;
+                            break;
+                    }
+                    break;
+                case 2:
+                    cout<<"Coming Soon!!!"<<endl;
+                    break;
+            }
+        }
+
+        void metode_bayar(){
+            cout<<endl<<"Metode Pembayaran : "<<endl;
+            cout<<"1. Tokopedia Saldo\n2. Virtual Account\nPilih : ";
+            cin>>pilih2;
+            switch(pilih2){
+                case 1:
+                    if(total[4]>saldo){
+                        cout<<"Saldo tidak cukup"<<endl;
+                    }else{
+                        cout<<"Total = "<<total[4]<<endl;
+                        while(bayar!='y'){
+                        cout<<endl<<"Bayar (y/n) : ";
+                        cin>>bayar;
+                            if(bayar=='y'){
+                                cout<<"Pembayaran Berhasil :)"<<endl;                                
+                            }else{
+                                cout<<"Bayarlah dasar miskin"<<endl;
+                            }
+                        }
+                    }
+            }            
+        }
+
+        void struk(){
+            system("cls");
+            garis(30);
+            cout<<"Alamat          = "<<alamat<<endl;
+            cout<<"Nama Barang     = ";
+            for(int a=0; a<4; a++){
+                if(ket_barang[a]==true){
+                    if(a==3){
+                        cout<<barang[a]<<" ";
+                    }else{
+                        cout<<barang[a]<<", ";
+                    }
+                }
+            }
+            cout<<endl;
+            if(cari=="Sepatu"){
+                cout<<"Pcs             = "<<pcs[3]<<" ("<<barang[3]<<")"<<endl;
+                cout<<"Ukuran          = ";
+                for(int a=0; a<pcs[3]; a++){
+                    if(a==pcs[3]-1){
+                        cout<<nama_ukuran[a]<<" "<<" ("<<barang[3]<<")";
+                    }else{
+                        cout<<nama_ukuran[a]<<", ";
+                    }
+                }
+                cout<<endl<<"Warna           = ";
+                for(int a=0; a<pcs[3]; a++){
+                    if(a==pcs[3]-1){
+                        cout<<nama_warna[a]<<" "<<" ("<<barang[3]<<")";
+                    }else{
+                        cout<<nama_warna[a]<<", ";
+                    }
+                }            
+            }
+            cout<<endl<<"Total Harga     = Rp. "<<total<<endl;
+            cout<<"Ongkos Kirim    = Rp. "<<ongkir<<endl;
+            cout<<"Potongan Ongkir = Rp. "<<potongan<<endl;
+            cout<<"Cashback        = Rp. "<<cashback<<endl;
+            cout<<"Asuransi        = Rp. "<<asuransi<<endl;
+            cout<<"Total Semuanya  = Rp. "<<total+ongkir-potongan+asuransi<<endl;
+            garis(30);
+            cout<<"Sisa saldo      = "<<saldo-total[4]-ongkir<<endl;
+        }
+
+        void garis(int x){
+            for(int a=0; a<x; a++){
+                cout<<"=";
+            }
+            cout<<endl;
+        }
+
+    void txt() {
+        ofstream gg;
+        gg.open("alpro.txt");
+        gg << "TOKOPEDIA\t\t\t\t\t\t\tINVOICE" << endl;
+        gg << "\n\t\t\t\t\t\t\t\tPembeli : " << user << endl;
+        gg << "\t\t\t\t\t\t\t\tAlamat  : " << alamat << endl;
+        gg << "\n====================================================================================================="
+        << endl;
+        gg << "info produk\t\t\t\t\t\t Jumlah\t\t\tHarga satuan\t\tTotal Harga" << endl;
+        gg << "====================================================================================================="
+        << endl;
+        for(int a=0; a<4; a++){
+            if(ket_barang[a]==true){          
+                if(a==0){
+                    gg<<barang[a]<< "\t\t   " << pcs_total[a] << "\t\t\t\t   " << harga[a] << "\t\t\t\t"<< total[a] << endl;                    
+                }else if(a==1){
+                    gg<<barang[a]<< "\t\t\t   " << pcs_total[a] << "\t\t\t\t   " << harga[a] << "\t\t\t\t"<< total[a] << endl;                 
+                }else if(a==2){
+                    gg<<barang[a]<< "\t\t\t\t\t   " << pcs_total[a] << "\t\t\t\t   " << harga[a] << "\t\t\t\t"<< total[a] << endl;                                     
+                }else{
+                    gg<<barang[a]<< "\t\t\t\t   " << pcs_total[a] << "\t\t\t\t   " << harga[a] << "\t\t\t\t"<< total[a] << endl;                    
+                }
+            }
+        } 
+        gg << "\n\n\t\t\t\t\t\t\t\tTotal Harga           : " << total[4]
+        << endl;
+        gg << "\t\t\t\t\t\t\t\tTotal Ongkos Kirim    : " << ongkir << endl;
+        gg << "\t\t\t\t\t\t\t\tPotongan Ongkos Kirim : " << potongan << endl;
+        gg << "\t\t\t\t\t\t\t\tCashback              : " << cashback << endl;
+        gg << "\t\t\t\t\t\t\t\tBiaya Asuransi        : " << asuransi << endl;
+        gg << "\t\t\t\t\t\t\t\tTotal Belanja         : "
+        << total[4] + ongkir - potongan + asuransi << endl;
+        gg << "\t\t\t\t\t\t\t\tTotal Tagihan         : "
+        << total[4] + ongkir - potongan + asuransi << endl;
+        gg.close();
+    }
+
+};
+
+int main(){
+    system("cls");
+    responsi tokopedia;
+    tokopedia.login();
+    tokopedia.cari_barang();
+    tokopedia.pilih_barang();
+    cout<<endl;
+    tokopedia.input_alamat();
+    tokopedia.kurir();
+    tokopedia.apply();
+    tokopedia.metode_bayar();
+    tokopedia.txt();
+    return 0;
+}
