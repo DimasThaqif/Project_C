@@ -1,0 +1,464 @@
+#include <ctime>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
+using namespace std;
+
+struct Boneka {
+  int harga, stock, pcs, totalHarga = 0, pcsTotal = 0;
+  string nama, brand;
+};
+
+struct Ekspedisi {
+  int harga = 20000;
+  string nama = "Reguler";
+};
+
+struct Keranjang {
+  int totalHarga, pcs, harga;
+  string brand, nama;
+};
+
+class Marketplace {
+private:
+  Boneka data[100];
+  Keranjang tambahKeranjang[100];
+  Ekspedisi nya;
+  string username, password, cari, alamat, namaPembeli;
+  int angka, pilih, tempat[100], indeks = 0, ketemu = 0, totalKetemu = 0, n = 0,
+                                 isiKeranjang = 0, totalBelanja = 0;
+
+public:
+  Marketplace() { cout << "Selamat Datang di Marketplace 05C" << endl; }
+
+  void inputBonekaAdmin() {
+    cin.ignore();
+    cout << "Brand : ";
+    getline(cin, data[indeks].brand);
+    cout << "Nama boneka : ";
+    getline(cin, data[indeks].nama);
+    cout << "Stok : ";
+    cin >> data[indeks].stock;
+    cout << "Harga : ";
+    cin >> data[indeks].harga;
+    cout << endl;
+  }
+
+  void tulis(string namaFile) {
+    ofstream tulisFile;
+    tulisFile.open(namaFile, ios::app);
+    tulisFile << data[indeks].brand << " ";
+    tulisFile << data[indeks].nama << " ";
+    tulisFile << data[indeks].stock << " ";
+    tulisFile << data[indeks].harga << endl;
+    tulisFile.close();
+  }
+
+  void baca(string namaFile) {
+    ifstream bacaFile;
+    indeks = 0;
+    bacaFile.open(namaFile);
+    // Menghitung banyaknya indeks
+    for (int a = 0; bacaFile >> data[a].brand >> data[a].nama >>
+                    data[a].stock >> data[a].harga;
+         a++) {
+      indeks++;
+    }
+    bacaFile.close();
+  }
+
+  void pilihSort(int batasUtama) {
+    cout << endl << endl;
+    cout << "Sort\n1. Stok\n2. Harga\n3. Stok dan Harga\nPilih : " << endl;
+    cin >> pilih;
+    cout << endl;
+    switch (pilih) {
+    case 1:
+      sortStok(batasUtama);
+      cetakHasilSorting(batasUtama);
+      break;
+    case 2:
+      sortHarga(batasUtama);
+      cetakHasilSorting(batasUtama);
+      break;
+    case 3:
+      sortStok(batasUtama);
+      sortHarga(batasUtama);
+      cetakHasilSorting(batasUtama);
+      break;
+    default:
+      cout << "Pilihan tidak tersedia" << endl;
+    }
+  }
+
+  void sortStok(int batas) {
+    for (int a = 0; a < batas; a++) {
+      for (int b = a + 1; b < batas; b++) {
+        if (data[tempat[a]].stock > data[tempat[b]].stock) {
+          swap(data[tempat[a]].brand, data[tempat[b]].brand);
+          swap(data[tempat[a]].stock, data[tempat[b]].stock);
+          swap(data[tempat[a]].nama, data[tempat[b]].nama);
+          swap(data[tempat[a]].harga, data[tempat[b]].harga);
+        }
+      }
+    }
+    // Cetak hasil sorting
+    // cetakHasilSorting(batas);
+    cout << endl;
+  }
+
+  void sortHarga(int batas) {
+    for (int a = 0; a < batas; a++) {
+      for (int b = a + 1; b < batas; b++) {
+        if (data[tempat[a]].harga > data[tempat[b]].harga) {
+          swap(data[tempat[a]].brand, data[tempat[b]].brand);
+          swap(data[tempat[a]].stock, data[tempat[b]].stock);
+          swap(data[tempat[a]].nama, data[tempat[b]].nama);
+          swap(data[tempat[a]].harga, data[tempat[b]].harga);
+        }
+      }
+    }
+    // Cetak hasil sorting
+    // cetakHasilSorting(batas);
+    cout << endl;
+  }
+
+  void cetakHasilSorting(int batas) {
+    for (int a = 0; a < batas; a++) {
+      cout << right << setw(2) << a + 1 << ". " << left << setw(20)
+           << data[tempat[a]].brand << setw(25) << data[tempat[a]].nama
+           << setw(10) << data[tempat[a]].stock << setw(10)
+           << data[tempat[a]].harga << endl;
+    }
+  }
+
+  void searchBoneka() {
+    char lagi;
+    bool ditemukan = false;
+    cin.ignore();
+    cout << "Nama Pembeli : ";
+    getline(cin, namaPembeli);
+    while (lagi != 'n') {
+      ketemu = 0;
+      totalKetemu = 0;
+      cout << "Cari Barang : ";
+      cin >> cari;
+      // Perulangan mencari karakter dalam string
+      for (int a = 0; a < indeks; a++) {
+        if (data[a].brand.find(cari) != string::npos ||
+            data[a].nama.find(cari) != string::npos) {
+          tempat[ketemu++] = a;
+          cout << right << setw(2) << ketemu << ". " << left << setw(20)
+               << data[a].brand << setw(25) << data[a].nama << setw(10)
+               << data[a].stock << setw(10) << data[a].harga << endl;
+          totalKetemu++;
+          ditemukan = true;
+        }
+      }
+      if (ditemukan == false) {
+        cout << "Barang tidak ditemukan" << endl;
+      }
+      cout << endl << "Cari lagi? (y/n) : ";
+      cin >> lagi;
+    }
+    do {
+      pilihSort(totalKetemu);
+      cout << endl << "Urutkan lagi? (y/n) : ";
+      cin >> lagi;
+    } while (lagi != 'n');
+  }
+
+  void isiPcsDanCetak(int n) {
+    ofstream keranjang;
+    ifstream bacaKeranjang;
+    int x = 0;
+    char pilih;
+    cout << "Pcs : ";
+    cin >> data[tempat[n]].pcs;
+    if (data[tempat[n]].pcs > data[tempat[n]].stock) {
+      cout << "Stok Tidak tersedia" << endl;
+      beliBoneka();
+    } else {
+      keranjang.open("keranjang.txt", ios::app);
+      data[tempat[n]].totalHarga = data[tempat[n]].pcs * data[tempat[n]].harga;
+      keranjang << data[tempat[n]].brand << " ";
+      keranjang << data[tempat[n]].nama << " ";
+      keranjang << data[tempat[n]].pcs << " ";
+      keranjang << data[tempat[n]].totalHarga << " ";
+      keranjang << data[tempat[n]].harga << endl;
+      keranjang.close();
+      bacaKeranjang.open("keranjang.txt");
+      for (int a = 0; bacaKeranjang >> tambahKeranjang[a].brand >>
+                      tambahKeranjang[a].nama >> tambahKeranjang[a].pcs >>
+                      tambahKeranjang[a].totalHarga >> tambahKeranjang[a].harga;
+           a++) {
+        x++;
+      }
+      isiKeranjang = x;
+      cout << "Lihat keranjang? (y/n) : ";
+      cin >> pilih;
+      switch (pilih) {
+      case 'y':
+        lihatKeranjang();
+        break;
+      case 'n':
+        break;
+      }
+      cout << "Tambah lagi? (y/n) : ";
+      cin >> pilih;
+      if (pilih == 'y') {
+        beliBoneka();
+      } else {
+        checkout();
+      }
+    }
+  }
+
+  void beliBoneka() {
+    cout << endl << "Pilih Boneka yang ingin dibeli : ";
+    cin >> pilih;
+    if (pilih > totalKetemu) {
+      cout << "Pilihan tidak tersedia" << endl;
+    } else {
+      switch (pilih) {
+      case 1:
+        n = 0;
+        isiPcsDanCetak(n);
+        break;
+      case 2:
+        n = 1;
+        isiPcsDanCetak(n);
+        break;
+      case 3:
+        n = 2;
+        isiPcsDanCetak(n);
+        break;
+      case 4:
+        n = 3;
+        isiPcsDanCetak(n);
+        break;
+      case 5:
+        n = 4;
+        isiPcsDanCetak(n);
+        break;
+      case 6:
+        n = 5;
+        isiPcsDanCetak(n);
+        break;
+      case 7:
+        n = 6;
+        isiPcsDanCetak(n);
+        break;
+      case 8:
+        n = 7;
+        isiPcsDanCetak(n);
+        break;
+      case 9:
+        n = 8;
+        isiPcsDanCetak(n);
+        break;
+      case 10:
+        n = 9;
+        isiPcsDanCetak(n);
+        break;
+      }
+    }
+  }
+
+  void checkout() {
+    char konfirmasi;
+    cin.ignore();
+    cout << "Alamat			: ";
+    getline(cin, alamat);
+    for (int a = 0; a < isiKeranjang; a++) {
+      totalBelanja += tambahKeranjang[a].totalHarga;
+    }
+    cout << "Total + Ongkir		: " << totalBelanja + nya.harga << endl;
+    cout << "Konfirmasi Bayar? (y/n) : ";
+    cin >> konfirmasi;
+    if (konfirmasi == 'y') {
+      cout << "Pembayaran Berhasil" << endl;
+    } else if (konfirmasi == 'n') {
+      cout << "Pembayaran dibatalkan" << endl;
+    } else {
+      cout << "Pilihan tidak tersedia" << endl;
+    }
+  }
+
+  void noInvoice(int n, int x) {
+    ofstream lorem;
+    int angkaHash, noRandom = 0;
+    char random[x];
+    lorem.open("Invoice.txt", ios::app);
+    lorem << right << setw(77) << "INV/";
+    for (int a = 0; a < n; a++) {
+      angkaHash = rand() % 9 + 1;
+      lorem << angkaHash;
+    }
+    for (int a = 0; a < x; a++) {
+      noRandom = rand() % 25 + 65;
+      random[a] = noRandom;
+    }
+    lorem << "/" << random << endl;
+    lorem.close();
+  }
+
+  void cetakKeInvoice(int n) {
+    ofstream lorem;
+    lorem.open("Invoice.txt", ios::app);
+    for (int a = 0; a < isiKeranjang; a++) {
+      lorem << left << setw(50) << tambahKeranjang[a].nama << setw(12)
+            << tambahKeranjang[a].pcs << setw(17) << tambahKeranjang[a].harga
+            << tambahKeranjang[a].totalHarga << endl;
+    }
+    lorem << "-----------------------------------------------------------------"
+             "-------------------------"
+          << endl;
+    lorem << setw(50) << "" << left << setw(29) << "TOTAL HARGA KESELURUHAN"
+          << totalBelanja << endl;
+    lorem << setw(50) << "" << left << setw(29) << "Total Ongkos Kirim"
+          << nya.harga << endl;
+    lorem << setw(50) << "" << left << setw(29) << "Total BELANJA"
+          << totalBelanja + nya.harga << endl
+          << endl;
+    lorem.close();
+  }
+
+  void lihatKeranjang() {
+    ifstream bacaKeranjang;
+    int x = 0;
+    bacaKeranjang.open("keranjang.txt");
+    for (int a = 0; bacaKeranjang >> tambahKeranjang[a].brand >>
+                    tambahKeranjang[a].nama >> tambahKeranjang[a].pcs >>
+                    tambahKeranjang[a].totalHarga >> tambahKeranjang[a].harga;
+         a++) {
+      x++;
+    }
+    isiKeranjang = x;
+    cout << left << setw(15) << "Brand" << setw(20) << "Nama Produk" << setw(15)
+         << "Jumlah" << setw(15) << "Harga Satuan" << setw(15) << "Harga Total"
+         << endl;
+    for (int a = 0; a < isiKeranjang; a++) {
+      cout << left << setw(15) << tambahKeranjang[a].brand << setw(20)
+           << tambahKeranjang[a].nama << setw(15) << tambahKeranjang[a].pcs
+           << setw(15) << tambahKeranjang[a].harga << setw(15)
+           << tambahKeranjang[a].totalHarga << endl;
+    }
+    bacaKeranjang.close();
+  }
+
+  friend istream &operator>>(istream &masuk, Marketplace &toko) {
+    ifstream bacaKeranjang;
+    bool milih;
+    int pilih, x = 0;
+    ;
+    int percobaan = 0;
+    // while(percobaan<=3){
+    cout << endl << "Silakan Login" << endl;
+    cout << "Username : ";
+    masuk >> toko.username;
+    cout << "Password : ";
+    masuk >> toko.password;
+    if (toko.username == "admin" && toko.password == "admin") {
+      // kondisiPerulangan=true;
+      cout << "Berhasil Login Sebagai Admin" << endl << endl;
+      while (!milih) {
+        cout << "1. Tambah Boneka\n2. Ke luar\nPilih : ";
+        cin >> toko.pilih;
+        switch (toko.pilih) {
+        case 1:
+          toko.inputBonekaAdmin();
+          toko.tulis("simpen.txt");
+          toko.indeks++;
+          break;
+        case 2:
+          milih = true;
+          break;
+        default:
+          milih = true;
+          cout << "Pilihan tidak tersedia" << endl;
+        }
+      }
+    } else if (toko.username == "user" && toko.password == "user") {
+      // kondisiPerulangan=true;
+      cout << "Berhasil Login Sebagai User" << endl << endl;
+      toko.baca("simpen.txt");
+      toko.searchBoneka();
+      lorem:
+      cout << endl
+           << "1. Tambah Barang\n2. Lihat Keranjang\n3. Bayar\nPilih : ";
+      masuk >> pilih;
+      switch (pilih) {
+      case 1:
+        toko.beliBoneka();
+        break;
+      case 2:
+        toko.lihatKeranjang();
+        goto lorem;
+        break;
+      case 3:
+        bacaKeranjang.open("keranjang.txt");
+        for (int a = 0;
+             bacaKeranjang >> toko.tambahKeranjang[a].brand >>
+             toko.tambahKeranjang[a].nama >> toko.tambahKeranjang[a].pcs >>
+             toko.tambahKeranjang[a].totalHarga >>
+             toko.tambahKeranjang[a].harga;
+             a++) {
+          x++;
+        }
+        toko.isiKeranjang = x;
+        toko.checkout();
+        break;
+      }
+    } else {
+      cout << "Username/Password salah" << endl << endl;
+      percobaan++;
+    }
+    // }
+    return masuk;
+  }
+
+  friend ostream &operator<<(ostream &keluar, Marketplace &toko) {
+    ofstream lorem;
+    time_t sekarang = time(0);
+    char *tanggalSekarang = ctime(&sekarang);
+    lorem.open("Invoice.txt", ios::app);
+    lorem << left << setw(80) << "Marketplace 05C"
+          << "Invoice" << endl;
+    toko.noInvoice(5, 4);
+    lorem << left << setw(50) << "DITERBITKAN ATAS NAMA"
+          << "UNTUK" << endl;
+    lorem << left << setw(50) << "Penjual : Marketplace 05C" << setw(20)
+          << "Pembeli "
+          << ": " << toko.namaPembeli << endl;
+    lorem << right << setw(68) << "Alamat Pengiriman "
+          << "  : " << toko.alamat << endl
+          << endl;
+    lorem << "================================================================="
+             "========================="
+          << endl;
+    lorem << left << setw(50) << "INFO PRODUK" << setw(12) << "JUMLAH"
+          << setw(17) << "Harga Satuan"
+          << "Total Harga" << endl;
+    lorem << "================================================================="
+             "========================="
+          << endl;
+    lorem.close();
+    toko.cetakKeInvoice(toko.n);
+    lorem.open("Invoice.txt", ios::app);
+    lorem << "Invoice ini sah dan diproses oleh komputer" << right << setw(49)
+          << tanggalSekarang << endl
+          << endl
+          << endl;
+    lorem.close();
+    return keluar;
+  }
+};
+
+int main() {
+  srand(time(NULL));
+  Marketplace tokoBoneka;
+  cin >> tokoBoneka;
+  cout << tokoBoneka;
+  return 0;
+}
