@@ -1,0 +1,65 @@
+#include<iostream>
+using namespace std;
+
+class studikasus{
+  public:
+    void input(){
+      cout<<"Nama \t: ";
+      getline(cin,nama);
+      cout<<"NIM \t: ";
+      cin>>NIM;
+      cout<<"Jumlah MatKul : ";
+      cin>>dmk;
+      cout<<"Jumlah SKS : ";
+      cin>>sks;
+      total=harga*sks;
+      diskon=total*0.15;
+      total-=diskon;
+      inputmatkul();
+      output();
+    }
+
+    void inputmatkul(){
+      for(int a=0; a<dmk; a++){
+        cin.ignore();
+        cout<<"MatKul : ";
+        getline(cin,matkul[a]);
+      }
+    }
+
+    void output(){
+      garis(40);
+      cout<<"Nama : "<<nama<<endl;
+      cout<<"NIM  : "<<NIM<<endl;
+      garis(40);
+      cout<<"Daftar Mata Kuliah : "<<endl;
+      for(int a=0; a<dmk; a++){
+        cout<<a+1<<". "<<matkul[a]<<endl;
+      }
+      garis(40);
+      cout<<"Jumlah SKS       = "<<sks<<endl;
+      cout<<"Total Pembayaran = "<<total<<endl;
+    }
+
+    int garis(int n){
+      if(n==1){
+        cout<<"="<<endl;
+        return n;
+      }else{
+        cout<<"=";
+        return garis(n-1);
+      }
+    }
+  
+  private:
+    string NIM, nama;
+    int diskon, total, sks, dmk, harga=125000; 
+    string matkul[100];
+    int awal=1;
+};
+
+int main(){
+  studikasus p5;
+  p5.input();
+  return 0;
+}
